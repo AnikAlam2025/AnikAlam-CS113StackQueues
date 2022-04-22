@@ -1,9 +1,15 @@
 
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Locale;
 
 /**
  * PalindromeTest : a test class for isPalindrome, a method intended to utilize stacks to evaluate if a given
@@ -12,7 +18,7 @@ import org.junit.Test;
  * A palindrome is a word, phrase, number, or other sequence of characters which reads the same backwards as it does
  * forwards. Such sequences include "madam," "top spot," or "no lemon, no melon".
  */
-public class PalindromeTest {
+public class PalindromeTest<E> extends ArrayListStack<E>{
 
     /** True test cases which include spaces and symbols */
     private static final String[] SIMPLE_TRUE = { "", " ", "A", "7", "%", "  ", "BB", "33", "**" };
@@ -36,16 +42,37 @@ public class PalindromeTest {
      * Utilizes stacks to determine if the given string is a palindrome. This method ignores whitespace and case
      * sensitivity, but does not ignore digits or symbols.
      *
-     * @param s a string comprised of any character
-     * @return returns true if a palindrome (ignoring whitespace and case sensitivity), false otherwise
+     * @param palindrome a string
+     * @return returns true if a palindrome, false otherwise
      */
-    private boolean isPalindrome(String s) {
-
+    private boolean isPalindrome(String palindrome) {
         // TODO:
         // Implement this method body using your ArrayListStack. Be mindful of your algorithm!
-        return false;
+        int index = 0;
+        ArrayListStack<Character> charStack = new ArrayListStack<>();
+        if (palindrome == null) { //if string null, throw exception
+            throw new IllegalArgumentException();
+        }
 
-    } // End of method isPalindrome
+        char[] characters = palindrome.replaceAll(" ", "").toUpperCase().toCharArray(); //replaces all blank spaces & sets all letters to uppercase for consistency
+
+        for (index = 0; index < characters.length/2 ; index++) { //split characters down the middle & push one half to charStack
+            charStack.push(characters[index]);
+        }
+        if(characters.length % 2 == 1) { //if length has a remainder of one, increment index
+            index++;
+        }
+
+        while(!charStack.empty()) { //while stack not empty,
+            if(charStack.pop() == characters[index++]) { //pop each character in stack, if equivalent to character in characters list at index, return true
+                return true;
+            }
+            return false; //will return false in the case that the character at that index does not match with what is popped from charStack
+        }
+        return true;
+    }
+
+
 
     @Test
     public void testErrors() {
